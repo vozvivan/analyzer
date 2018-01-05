@@ -2,27 +2,27 @@
 # -- Content-Encoding: UTF-8 --
 """
 This bundle provides a component that is a simple implementation of the
-Model service. It contains LinearRegression.
+Model service. It contains LogisticRegression.
 """
 
 # iPOPO decorators
 from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
     Validate, Invalidate, Instantiate
 
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 
 
 # Name the iPOPO component factory
 @ComponentFactory("model_lr_factory")
 # This component provides a dictionary service
 @Provides("model_service")
-# It is the GradientBoostingClassifier
-@Property("_name", "name", "LinearRegression")
+# It is the LogisticRegression
+@Property("_name", "name", "LogisticRegression")
 # Automatically instantiate a component when this factory is loaded
 @Instantiate("model_lr_instance")
 class Model(object):
     """
-    Implementation of a model Service LinearRegression.
+    Implementation of a model Service LogisticRegression.
     """
 
     def __init__(self):
@@ -38,7 +38,7 @@ class Model(object):
         provided service is registered to the framework.
         """
         # All setup should be done here
-        self.model = LinearRegression()
+        self.model = LogisticRegression()
 
         print('A LinearRegression has been added')
 
@@ -50,14 +50,14 @@ class Model(object):
         """
         self.model = None
 
-    def fit(self, X_train):
+    def fit(self, X_train, y_train):
         """
         ...
 
         @param Train_data.
         @return True if the word is in the dictionary, False otherwise.
         """
-        self.model.fit(X_train)
+        self.model.fit(X_train, y_train)
 
     def predict(self, X_test):
         """

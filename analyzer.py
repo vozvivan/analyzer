@@ -89,7 +89,7 @@ class Analyzer(object):
 
                 # A text has been given: call the spell checker, which have been
                 # injected by iPOPO.
-                models = self._spell_checker.check_model(X_train, X_test, y_train, all)
+                models = self._model_consumer.check_model(X_train, X_test, y_train, bool(all))
                 for model in models:
                     print('acc is {} for {}'.format(\
                         accuracy_score(y_test, models[model]), model))

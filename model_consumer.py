@@ -89,13 +89,13 @@ class ModelComsumer(object):
         df_predict = pd.DataFrame()
         if all:
             for model in self.models:
-                self.models[model].fit(X_train)
+                self.models[model].fit(X_train, y_train)
                 df_predict[model] = self.models[model].predict(X_test)
 
         else:
             try:
                 # Get the dictionary corresponding to the requested model
-                self.models[model].fit(X_train)
+                self.models[model].fit(X_train, y_train)
                 df_predict[model] = self.models[model].predict(X_test)
             except KeyError:
                 # Not found
