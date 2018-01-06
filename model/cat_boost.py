@@ -13,24 +13,19 @@ from sklearn.ensemble import GradientBoostingClassifier
 
 from catboost import Pool, CatBoost
 
+from defaut_classes.model_services import ModelService
+
 # Name the iPOPO component factory
 @ComponentFactory("model_cat_boost_factory")
-# This component provides a dictionary service
-@Provides("model_service")
 # It is the GradientBoostingClassifier
 @Property("_name", "name", "CatBoost")
 # Automatically instantiate a component when this factory is loaded
 @Instantiate("model_cat_boost_instance")
-class Model(object):
+class Model(ModelService):
     """
     Implementation of a model GradientBoostingClassifier.
     """
 
-    def __init__(self):
-        """
-        Declares members, to respect PEP-8.
-        """
-        self.model = None
 
     @Validate
     def validate(self, context):
@@ -42,13 +37,6 @@ class Model(object):
 
         print('A CatBoost has been added')
 
-    @Invalidate
-    def invalidate(self, context):
-        """
-        The component has been invalidated. This method is called right after
-        the provided service has been removed from the framework.
-        """
-        self.model = None
 
     def fit(self, data):
         """
@@ -59,6 +47,11 @@ class Model(object):
         """
         self.model = CatBoost()
         try:
+            self.features = list(data['X_train'].columns)
+        except:
+            print('Warning\nHAVE NO INFO ABOUT FEATURES')
+            self.features = []
+        try:
             p = Pool(data['X_train'], data['y_train'], data['cat_features'])
         except KeyError:
             print('Nothing know bout categorical features')
@@ -67,11 +60,5 @@ class Model(object):
         self.model.fit(p, logging_level='Silent')
 
     def predict(self, data):
-        """
-        ...
-
-        @param Test_data.
-        @return tested
-        """
         test = Pool(data['X_test'])
         return self.model.predict(test, prediction_type='Class') if self.model else -1

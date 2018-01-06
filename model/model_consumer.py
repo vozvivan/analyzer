@@ -92,7 +92,8 @@ class ModelComsumer(object):
                 #df_predict[model] = self.models[model].predict(data['X_test'])
                 yield {
                         'name':model,\
-                        'predict': self.models[model].predict(data)
+                        'predict': self.models[model].predict(data),\
+                        'model': self.models[model]
                 }
         else:
             try:
@@ -101,7 +102,8 @@ class ModelComsumer(object):
                 #df_predict[model] = self.models[model].predict(data['X_test'])
                 yield {
                     'name': model, \
-                    'predict': self.models[model].predict(data)
+                    'predict': self.models[model].predict(data),\
+                    'model': self.models[model]
                 }
             except KeyError:
                 # Not found

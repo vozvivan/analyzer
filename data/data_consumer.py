@@ -20,6 +20,7 @@ import re
 @Provides("data_consumer_service")
 # Consume all model consumer services available (aggregate them)
 @Requires("_datasets", "data_service", aggregate=True)
+@Requires("_data_bank", "data_bank", optional=True)
 # Automatic instantiation
 @Instantiate("data_consumer_instance")
 class DataComsumer(object):
@@ -82,4 +83,6 @@ class DataComsumer(object):
         for data_name in self.datasets:
             data = self.datasets[data_name].get_data(**kwargs)
             data['name'] = data_name
+            if self._data_bank:
+                data['bank'] = self._data_bank.get_data()
             yield data

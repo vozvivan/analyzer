@@ -33,6 +33,8 @@ class Analyzer(object):
         """
         # the spell checker service
         self._model_consumer = None
+        self._data_consumer = None
+        self._metric_consumer = None
 
     @Validate
     def validate(self, context):
@@ -83,8 +85,12 @@ class Analyzer(object):
 
                 # A text has been given: call the spell checker, which have been
                 # injected by iPOPO.
+
+
                 for data in self._data_consumer.get_data(test_size=0.1):
                     for model in self._model_consumer.check_model(data, bool(all)):
                         for metric in self._metric_consumer.evaluate(data, model):
                             print('{} is {} for {} in {}'.format(\
                                 metric['name'], metric['value'], model['name'], data['name']))
+
+                #print(self._data_sber.get_data())

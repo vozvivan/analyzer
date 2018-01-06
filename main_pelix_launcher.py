@@ -11,7 +11,7 @@ from pelix.utilities import use_service
 metric_path = './metric'
 model_path = './model'
 data_path = './data'
-
+bank_path = './bank'
 
 def main():
     """
@@ -43,8 +43,8 @@ def main():
     context.install_bundle("model_consumer", path=model_path).start()
 
     # Start the model bundles, which provide the ml models
-    context.install_bundle("iris", path=data_path).start()
-    context.install_bundle("breast_cancer", path=data_path).start()
+    #context.install_bundle("iris", path=data_path).start()
+    #context.install_bundle("breast_cancer", path=data_path).start()
     context.install_bundle("kyoto", path=data_path).start()
     context.install_bundle("kyoto_595_notime", path=data_path).start()
     context.install_bundle("kyoto_all", path=data_path).start()
@@ -53,10 +53,15 @@ def main():
     # Start the model_consumer bundle, which provides the model consumer service.
     context.install_bundle("data_consumer", path=data_path).start()
 
+    context.install_bundle("data_bank", path=bank_path).start()
 
     # Start the model bundles, which provide the ml models
     context.install_bundle("accuracy_score", path=metric_path).start()
     context.install_bundle("hamming_loss", path=metric_path).start()
+    context.install_bundle("attacks_50", path=metric_path).start()
+    context.install_bundle("attacks_90", path=metric_path).start()
+    context.install_bundle("sev_50", path=metric_path).start()
+    context.install_bundle("sev_90", path=metric_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
     context.install_bundle("metric_consumer", path=metric_path).start()

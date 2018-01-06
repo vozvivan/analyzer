@@ -10,26 +10,20 @@ from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
     Validate, Invalidate, Instantiate
 
 from sklearn.linear_model import LogisticRegression
+import numpy as np
 
+from defaut_classes.model_services import ModelService
 
 # Name the iPOPO component factory
 @ComponentFactory("model_lr_factory")
-# This component provides a dictionary service
-@Provides("model_service")
 # It is the LogisticRegression
 @Property("_name", "name", "LogisticRegression")
 # Automatically instantiate a component when this factory is loaded
 @Instantiate("model_lr_instance")
-class Model(object):
+class Model(ModelService):
     """
     Implementation of a model Service LogisticRegression.
     """
-
-    def __init__(self):
-        """
-        Declares members, to respect PEP-8.
-        """
-        self.model = None
 
     @Validate
     def validate(self, context):
@@ -42,29 +36,5 @@ class Model(object):
 
         print('A LinearRegression has been added')
 
-    @Invalidate
-    def invalidate(self, context):
-        """
-        The component has been invalidated. This method is called right after
-        the provided service has been removed from the framework.
-        """
-        self.model = None
 
-    def fit(self, data):
-        """
-        ...
 
-        @param Train_data.
-        @return True if the word is in the dictionary, False otherwise.
-        """
-        self.model.fit(data['X_train'], data['y_train'])
-
-    def predict(self, data):
-        """
-        ...
-
-        @param Test_data.
-        @return tested
-        """
-
-        return self.model.predict(data['X_test']) if self.model else -1

@@ -11,17 +11,13 @@ from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
 
 
 from sklearn.model_selection import train_test_split
+from defaut_classes.data_services import KyotoDataService
 
 # Name the iPOPO component factory
 @ComponentFactory("data_kyoto_595_notime")
-# This component provides a dictionary service
-@Provides("data_service")
-@Requires("_kyoto_data", "data_kyoto_service")
-# It is the LogisticRegression
 @Property("_name", "name", "Kyoto 5:95 NoTime")
-# Automatically instantiate a component when this factory is loaded
 @Instantiate("data_kyoto_595_notime_instance")
-class Data(object):
+class Data(KyotoDataService):
     """
     Implementation of a model Service LogisticRegression.
     """
@@ -38,16 +34,9 @@ class Data(object):
 
 
     def get_data(self, **kwargs):
-        df_kyoto = self._kyoto_data.get_data(p_attacks=.05, time=False)
+        self.df = self._kyoto_data.get_data(p_attacks=.05, time=False)
 
-        data = {}
+        self.split()
 
-        X_train, X_test, y_train, y_test = train_test_split(df_kyoto.drop(['_Label_']), df_kyoto['_Label_'], **kwargs)
-
-        data['X_train'], data['X_test'], data['y_train'],\
-            data['y_test'] = X_train, X_test, y_train, y_test
-
-        data['cat_features'] = [0, 1, 2]
-
-        return data
+        return self.data
 
