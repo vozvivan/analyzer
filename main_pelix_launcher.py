@@ -8,6 +8,10 @@ Starts a Pelix framework and installs the analyzer models bundles
 import pelix.framework
 from pelix.utilities import use_service
 
+metric_path = './metric'
+model_path = './model'
+data_path = './data'
+
 
 def main():
     """
@@ -31,26 +35,26 @@ def main():
     context = framework.get_bundle_context()
 
     # Start the model bundles, which provide the ml models
-    context.install_bundle("model_gb_clf").start()
-    context.install_bundle("model_lr").start()
+    context.install_bundle("gb_clf", path=model_path).start()
+    context.install_bundle("lr", path=model_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
-    context.install_bundle("model_consumer").start()
+    context.install_bundle("model_consumer", path=model_path).start()
 
     # Start the model bundles, which provide the ml models
-    context.install_bundle("data_iris").start()
-    context.install_bundle("data_breast_cancer").start()
+    context.install_bundle("iris", path=data_path).start()
+    context.install_bundle("breast_cancer", path=data_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
-    context.install_bundle("data_consumer").start()
+    context.install_bundle("data_consumer", path=data_path).start()
 
 
     # Start the model bundles, which provide the ml models
-    context.install_bundle("metric_accuracy_score").start()
-    context.install_bundle("metric_hamming_loss").start()
+    context.install_bundle("accuracy_score", path=metric_path).start()
+    context.install_bundle("hamming_loss", path=metric_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
-    context.install_bundle("metric_consumer").start()
+    context.install_bundle("metric_consumer", path=metric_path).start()
 
 
     # Start the analyzer bundle, which provides a shell command

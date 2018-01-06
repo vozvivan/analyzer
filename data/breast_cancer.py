@@ -11,17 +11,17 @@ from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
 
 from sklearn.linear_model import LogisticRegression
 
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 
 # Name the iPOPO component factory
-@ComponentFactory("data_iris")
+@ComponentFactory("data_breast_cancer")
 # This component provides a dictionary service
 @Provides("data_service")
 # It is the LogisticRegression
-@Property("_name", "name", "iris")
+@Property("_name", "name", "breast_cancer")
 # Automatically instantiate a component when this factory is loaded
-@Instantiate("data_iris_instance")
+@Instantiate("data_breast_cancer_instance")
 class Data(object):
     """
     Implementation of a model Service LogisticRegression.
@@ -41,10 +41,10 @@ class Data(object):
         provided service is registered to the framework.
         """
         # All setup should be done here
-        iris = load_iris()
-        self.X, self.y = iris.data[:, :2], iris.target
+        cancer = load_breast_cancer()
+        self.X, self.y = cancer.data, cancer.target
 
-        print('A Iris Data has been added')
+        print('A Breast Cancer Data has been added')
 
     @Invalidate
     def invalidate(self, context):
@@ -61,7 +61,7 @@ class Data(object):
 
         X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, **kwargs)
 
-        data['name'] = 'iris'
+        #data['name'] = 'breast cancer'
 
         data['X_train'], data['X_test'], data['y_train'],\
             data['y_test'] = X_train, X_test, y_train, y_test

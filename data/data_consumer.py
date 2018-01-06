@@ -79,5 +79,7 @@ class DataComsumer(object):
 
     def get_data(self, **kwargs):
 
-        for data in self.datasets:
-            yield self.datasets[data].get_data(**kwargs)
+        for data_name in self.datasets:
+            data = self.datasets[data_name].get_data(**kwargs)
+            data['name'] = data_name
+            yield data
