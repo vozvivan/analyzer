@@ -77,8 +77,7 @@ class ModelComsumer(object):
         """
         print('A model consumer has been stopped')
 
-    def check_model(self, X_train, X_test,\
-                    y_train, all=True, model='GradientBoostingClassifier'):
+    def check_model(self, data, all=True, model='GradientBoostingClassifier'):
         """
         ...
 
@@ -86,19 +85,26 @@ class ModelComsumer(object):
         :return: ...
         :raise ...
         """
-        df_predict = pd.DataFrame()
+        #df_predict = pd.DataFrame()
         if all:
             for model in self.models:
-                self.models[model].fit(X_train, y_train)
-                df_predict[model] = self.models[model].predict(X_test)
-
+                self.models[model].fit(data['X_train'], data['y_train'])
+                #df_predict[model] = self.models[model].predict(data['X_test'])
+                yield {
+                        'name':model,\
+                        'predict': self.models[model].predict(data['X_test'])
+                }
         else:
             try:
                 # Get the dictionary corresponding to the requested model
-                self.models[model].fit(X_train, y_train)
-                df_predict[model] = self.models[model].predict(X_test)
+                self.models[model].fit(data['X_train'], data['y_train'])
+                #df_predict[model] = self.models[model].predict(data['X_test'])
+                yield {
+                    'name': model, \
+                    'predict': self.models[model].predict(data['X_test'])
+                }
             except KeyError:
                 # Not found
                 raise KeyError('Unknown model: {}'.format(model))
 
-        return df_predict
+        #return df_predict

@@ -11,15 +11,12 @@ from pelix.ipopo.decorators import ComponentFactory, Provides, \
 # Specification of a command service for the Pelix shell
 from pelix.shell import SHELL_COMMAND_SPEC
 
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-
 # Name the component factory
 @ComponentFactory("analyzer_factory")
 # Consume a single model_consumer_service
 @Requires("_model_consumer", "model_consumer_service")
 @Requires("_data_consumer", "data_consumer_service")
+@Requires("_metric_consumer", "metric_consumer_service")
 # Provide a shell command service
 @Provides(SHELL_COMMAND_SPEC)
 # Automatic instantiation
@@ -74,10 +71,6 @@ class Analyzer(object):
                            the user.
         """
 
-        iris = load_iris()
-        X, y = iris.data[:, :2], iris.target
-        X_train, X_test, y_train, y_test = train_test_split(X, y)
-
         passage = None
         all = io_handler.prompt("Please enter all models or not: ")
 
@@ -90,9 +83,8 @@ class Analyzer(object):
 
                 # A text has been given: call the spell checker, which have been
                 # injected by iPOPO.
-                for data in self._data_consumer.get_data():
-                    models = self._model_consumer.check_model(data['X_train'],\
-                                                              data['X_test'], data['y_train'], bool(all))
-                    for model in models:
-                        print('acc is {} for {} in {}'.format(\
-                            accuracy_score(data['y_test'], models[model]), model, data['name']))
+                for data in self._data_consumer.get_data(test_size=0.1):
+                    for model in self._model_consumer.check_model(data, bool(all)):
+                        for metric in self._metric_consumer.evaluate(data, model):
+                            print('{} is {} for {} in {}'.format(\
+                                metric['name'], metric['value'], model['name'], data['name']))

@@ -44,6 +44,15 @@ def main():
     # Start the model_consumer bundle, which provides the model consumer service.
     context.install_bundle("data_consumer").start()
 
+
+    # Start the model bundles, which provide the ml models
+    context.install_bundle("metric_accuracy_score").start()
+    context.install_bundle("metric_hamming_loss").start()
+
+    # Start the model_consumer bundle, which provides the model consumer service.
+    context.install_bundle("metric_consumer").start()
+
+
     # Start the analyzer bundle, which provides a shell command
     context.install_bundle("analyzer").start()
 
