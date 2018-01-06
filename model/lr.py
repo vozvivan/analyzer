@@ -50,16 +50,16 @@ class Model(object):
         """
         self.model = None
 
-    def fit(self, X_train, y_train):
+    def fit(self, data):
         """
         ...
 
         @param Train_data.
         @return True if the word is in the dictionary, False otherwise.
         """
-        self.model.fit(X_train, y_train)
+        self.model.fit(data['X_train'], data['y_train'])
 
-    def predict(self, X_test):
+    def predict(self, data):
         """
         ...
 
@@ -67,4 +67,4 @@ class Model(object):
         @return tested
         """
 
-        return self.model.predict(X_test) if self.model else -1
+        return self.model.predict(data['X_test']) if self.model else -1

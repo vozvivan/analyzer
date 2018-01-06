@@ -41,8 +41,6 @@ class Data(object):
         provided service is registered to the framework.
         """
         # All setup should be done here
-        iris = load_iris()
-        self.X, self.y = iris.data[:, :2], iris.target
 
         print('A Iris Data has been added')
 
@@ -56,6 +54,8 @@ class Data(object):
         self.y = None
 
     def get_data(self, **kwargs):
+        iris = load_iris()
+        self.X, self.y = iris.data[:, :2], iris.target
 
         data = {}
 
@@ -65,6 +65,8 @@ class Data(object):
 
         data['X_train'], data['X_test'], data['y_train'],\
             data['y_test'] = X_train, X_test, y_train, y_test
+
+        data['cat_features'] = []
 
         return data
 

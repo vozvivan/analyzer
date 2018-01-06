@@ -88,20 +88,20 @@ class ModelComsumer(object):
         #df_predict = pd.DataFrame()
         if all:
             for model in self.models:
-                self.models[model].fit(data['X_train'], data['y_train'])
+                self.models[model].fit(data)
                 #df_predict[model] = self.models[model].predict(data['X_test'])
                 yield {
                         'name':model,\
-                        'predict': self.models[model].predict(data['X_test'])
+                        'predict': self.models[model].predict(data)
                 }
         else:
             try:
                 # Get the dictionary corresponding to the requested model
-                self.models[model].fit(data['X_train'], data['y_train'])
+                self.models[model].fit(data)
                 #df_predict[model] = self.models[model].predict(data['X_test'])
                 yield {
                     'name': model, \
-                    'predict': self.models[model].predict(data['X_test'])
+                    'predict': self.models[model].predict(data)
                 }
             except KeyError:
                 # Not found

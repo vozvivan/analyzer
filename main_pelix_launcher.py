@@ -37,6 +37,7 @@ def main():
     # Start the model bundles, which provide the ml models
     context.install_bundle("gb_clf", path=model_path).start()
     context.install_bundle("lr", path=model_path).start()
+    #context.install_bundle("cat_boost", path=model_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
     context.install_bundle("model_consumer", path=model_path).start()
@@ -44,6 +45,10 @@ def main():
     # Start the model bundles, which provide the ml models
     context.install_bundle("iris", path=data_path).start()
     context.install_bundle("breast_cancer", path=data_path).start()
+    context.install_bundle("kyoto", path=data_path).start()
+    context.install_bundle("kyoto_595_notime", path=data_path).start()
+    context.install_bundle("kyoto_all", path=data_path).start()
+    context.install_bundle("kyoto_notime", path=data_path).start()
 
     # Start the model_consumer bundle, which provides the model consumer service.
     context.install_bundle("data_consumer", path=data_path).start()

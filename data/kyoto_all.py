@@ -7,32 +7,26 @@ Model service. It contains LogisticRegression.
 
 # iPOPO decorators
 from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
-    Validate, Invalidate, Instantiate
+    Validate, Invalidate, Instantiate, Requires
 
 from sklearn.linear_model import LogisticRegression
 
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
 # Name the iPOPO component factory
-@ComponentFactory("data_breast_cancer")
+@ComponentFactory("data_kyoto_all")
 # This component provides a dictionary service
 @Provides("data_service")
+@Requires("_kyoto_data", "data_kyoto_service")
 # It is the LogisticRegression
-@Property("_name", "name", "breast_cancer")
+@Property("_name", "name", "kyoto_all")
 # Automatically instantiate a component when this factory is loaded
-@Instantiate("data_breast_cancer_instance")
+@Instantiate("data_kyoto_all_instance")
 class Data(object):
     """
     Implementation of a model Service LogisticRegression.
     """
-
-    def __init__(self):
-        """
-        Declares members, to respect PEP-8.
-        """
-        self.X = None
-        self.y = None
 
     @Validate
     def validate(self, context):
@@ -42,31 +36,20 @@ class Data(object):
         """
         # All setup should be done here
 
-        print('A Breast Cancer Data has been added')
+        print('A Kyoto Data All has been added')
 
-    @Invalidate
-    def invalidate(self, context):
-        """
-        The component has been invalidated. This method is called right after
-        the provided service has been removed from the framework.
-        """
-        self.X = None
-        self.y = None
 
     def get_data(self, **kwargs):
-        cancer = load_breast_cancer()
-        self.X, self.y = cancer.data, cancer.target
+        df_kyoto = self._kyoto_data.get_data()
 
         data = {}
 
-        X_train, X_test, y_train, y_test = train_test_split(self.X, self.y, **kwargs)
-
-        #data['name'] = 'breast cancer'
+        X_train, X_test, y_train, y_test = train_test_split(df_kyoto.drop(['_Label_']), df_kyoto['_Label_'], **kwargs)
 
         data['X_train'], data['X_test'], data['y_train'],\
             data['y_test'] = X_train, X_test, y_train, y_test
 
-        data['cat_features'] = []
+        data['cat_features'] = [0, 1, 2]
 
         return data
 

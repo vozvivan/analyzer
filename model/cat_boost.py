@@ -11,15 +11,16 @@ from pelix.ipopo.decorators import ComponentFactory, Property, Provides, \
 
 from sklearn.ensemble import GradientBoostingClassifier
 
+from catboost import Pool, CatBoost
 
 # Name the iPOPO component factory
-@ComponentFactory("model_gb_clf_factory")
+@ComponentFactory("model_cat_boost_factory")
 # This component provides a dictionary service
 @Provides("model_service")
 # It is the GradientBoostingClassifier
-@Property("_name", "name", "GradientBoostingClassifier")
+@Property("_name", "name", "CatBoost")
 # Automatically instantiate a component when this factory is loaded
-@Instantiate("model_gb_clf_instance")
+@Instantiate("model_cat_boost_instance")
 class Model(object):
     """
     Implementation of a model GradientBoostingClassifier.
@@ -39,9 +40,7 @@ class Model(object):
         """
         # All setup should be done here
 
-        self.model = GradientBoostingClassifier()
-
-        print('A GradientBoostingClassifier has been added')
+        print('A CatBoost has been added')
 
     @Invalidate
     def invalidate(self, context):
@@ -58,7 +57,14 @@ class Model(object):
         @param Train_data.
         @return True if the word is in the dictionary, False otherwise.
         """
-        self.model.fit(data['X_train'], data['y_train'])
+        self.model = CatBoost()
+        try:
+            p = Pool(data['X_train'], data['y_train'], data['cat_features'])
+        except KeyError:
+            print('Nothing know bout categorical features')
+            p = Pool(data['X_train'], data['y_train'], [])
+
+        self.model.fit(p, logging_level='Silent')
 
     def predict(self, data):
         """
@@ -67,5 +73,5 @@ class Model(object):
         @param Test_data.
         @return tested
         """
-
-        return self.model.predict(data['X_test']) if self.model else -1
+        test = Pool(data['X_test'])
+        return self.model.predict(test, prediction_type='Class') if self.model else -1
