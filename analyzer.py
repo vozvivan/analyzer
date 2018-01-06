@@ -19,6 +19,7 @@ from sklearn.metrics import accuracy_score
 @ComponentFactory("analyzer_factory")
 # Consume a single model_consumer_service
 @Requires("_model_consumer", "model_consumer_service")
+@Requires("_data_consumer", "data_consumer_service")
 # Provide a shell command service
 @Provides(SHELL_COMMAND_SPEC)
 # Automatic instantiation
@@ -89,7 +90,9 @@ class Analyzer(object):
 
                 # A text has been given: call the spell checker, which have been
                 # injected by iPOPO.
-                models = self._model_consumer.check_model(X_train, X_test, y_train, bool(all))
-                for model in models:
-                    print('acc is {} for {}'.format(\
-                        accuracy_score(y_test, models[model]), model))
+                for data in self._data_consumer.get_data():
+                    models = self._model_consumer.check_model(data['X_train'],\
+                                                              data['X_test'], data['y_train'], bool(all))
+                    for model in models:
+                        print('acc is {} for {} in {}'.format(\
+                            accuracy_score(data['y_test'], models[model]), model, data['name']))
