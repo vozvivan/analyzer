@@ -95,18 +95,15 @@ class ModelComsumer(object):
                         'predict': self.models[model].predict(data),\
                         'model': self.models[model]
                 }
+
         else:
-            try:
-                # Get the dictionary corresponding to the requested model
-                self.models[model].fit(data)
-                #df_predict[model] = self.models[model].predict(data['X_test'])
-                yield {
-                    'name': model, \
-                    'predict': self.models[model].predict(data),\
-                    'model': self.models[model]
-                }
-            except KeyError:
-                # Not found
-                raise KeyError('Unknown model: {}'.format(model))
+            # Get the dictionary corresponding to the requested model
+            self.models[model].fit(data)
+            #df_predict[model] = self.models[model].predict(data['X_test'])
+            yield {
+                'name': model, \
+                'predict': self.models[model].predict(data),\
+                'model': self.models[model]
+            }
 
         #return df_predict

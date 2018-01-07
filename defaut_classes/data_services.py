@@ -14,12 +14,34 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 
+@ComponentFactory("data_service_default_factory")
+@Provides("data_service")
+@Property("_name", "name", "data_service_defalut")
+@Instantiate("data_kyoto_default_instance")
+class DataService(object):
 
+    def __init__(self):
+        self.data = None
+
+    @Validate
+    def validate(self, context):
+
+        print('A Data Service has been added')
+
+    @Invalidate
+    def validate(self, context):
+        self.data=None
+        print('A Data Service has been removed')
+
+    def get_data(self, **kwargs):
+        return self.data
+
+@ComponentFactory("kyoto_data_default_factory")
 @Provides("data_service")
 @Requires("_kyoto_data", "data_kyoto_service")
 @Property("_name", "name", "kyoto_defalut")
 @Instantiate("data_kyoto_default_instance")
-class KyotoDataService(object):
+class KyotoDataService(DataService):
 
     def __init__(self):
         self.df = None

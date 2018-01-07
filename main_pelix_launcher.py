@@ -43,8 +43,8 @@ def main():
     context.install_bundle("model_consumer", path=model_path).start()
 
     # Start the model bundles, which provide the ml models
-    #context.install_bundle("iris", path=data_path).start()
-    #context.install_bundle("breast_cancer", path=data_path).start()
+    context.install_bundle("iris", path=data_path).start()
+    context.install_bundle("breast_cancer", path=data_path).start()
     context.install_bundle("kyoto", path=data_path).start()
     context.install_bundle("kyoto_595_notime", path=data_path).start()
     context.install_bundle("kyoto_all", path=data_path).start()

@@ -86,11 +86,18 @@ class Analyzer(object):
                 # A text has been given: call the spell checker, which have been
                 # injected by iPOPO.
 
-
-                for data in self._data_consumer.get_data(test_size=0.1):
-                    for model in self._model_consumer.check_model(data, bool(all)):
-                        for metric in self._metric_consumer.evaluate(data, model):
-                            print('{} is {} for {} in {}'.format(\
-                                metric['name'], metric['value'], model['name'], data['name']))
-
+                try:
+                    for data in self._data_consumer.get_data(test_size=0.1):
+                        try:
+                            for model in self._model_consumer.check_model(data, bool(all)):
+                                try:
+                                    for metric in self._metric_consumer.evaluate(data, model):
+                                        print('{} is {} for {} in {}'.format(\
+                                            metric['name'], metric['value'], model['name'], data['name']))
+                                except Exception as ex:
+                                    print(str(ex))
+                        except Exception as ex:
+                            print(str(ex))
+                except Exception as ex:
+                    print(str(ex))
                 #print(self._data_sber.get_data())

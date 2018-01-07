@@ -40,23 +40,24 @@ class ModelService(object):
         """
         try:
             self.model.fit(data['X_train'], data['y_train'])
-        except AttributeError:
-            print('Model {} have no fit method'.format(self.model))
-        except KeyError:
-            print('Error in input data')
+        except Exception as ex:
+            raise Exception('{} for {}'.format(str(ex), self._name))
         try:
             self.features = list(data['X_train'].columns)
         except:
-            print('Warning\nHAVE NO INFO ABOUT FEATURES')
+            print('Warning: HAVE NO INFO ABOUT FEATURES when fitting {} on {}'.format(self._name, data['name']))
             self.features = []
 
     def predict(self, data):
         try:
-            return self.model.predict(data['X_test']) if self.model else -1
-        except AttributeError:
-            print('Model {} have no predict method'.format(self.model))
-        except KeyError:
-            print('Error in input data')
+            if self.features:
+                pred=self.model.predict_proba(data['X_test'][self.features])
+            else:
+                print('Try to predict with no info bout binding of fetures in {} on {}'.format(self._name, data['name']))
+                pred = self.model.predict(data['X_test'])
+            return self.model.predict(data['X_test'])
+        except Exception as ex:
+            raise Exception('Cannot predict')
 
     def predict_by_proba(self, data, p_value=0.5):
         """
@@ -70,14 +71,12 @@ class ModelService(object):
             if self.features:
                 pred=self.model.predict_proba(data['X_test'][self.features])
             else:
+                print('Try to predict with no info bout binding of fetures in {} on {}'.format(self._name, data['name']))
                 pred = self.model.predict_proba(data['X_test'])
-        except AttributeError:
-            print('Model {} have no predict_proba method'.format(self.model))
-        except KeyError:
-            print('Error in input data')
-        except:
-            print('Have no model or Features Conflict')
+        except Exception as ex :
+            raise Exception('Cannot predict')
+        else:
+            return np.apply_along_axis(lambda x: 1 if x[0] > p_value else 0, 1, pred)
 
-        return np.apply_along_axis(lambda x: 1 if x[0] > p_value else 0, 1, pred)
 
 
